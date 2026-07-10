@@ -1,4 +1,4 @@
-const piuGameScoreLink = "https://piugame.com/my_page/my_best_score.php";
+const piuGameScoreLink = "https://phoenix.piugame.com/my_page/my_best_score.php";
 
 async function getLastScorePage() {
     return parseInt($('.board_paging button', await $.get(piuGameScoreLink)).last().attr('onclick').match(/page=(\d+)/)[1]);
@@ -14,12 +14,20 @@ async function getScoresByPage(pageIndex) {
             // Character format breaks uploader.
             return true;
         }
-        var chartType = $($('.stepBall_img_wrap .imG img',this)[0]).attr("src").substring(40,41);
-        var difficultyLevel = $('.stepBall_img_wrap .imG img',this).map((index,i)=> $(i).attr("src").substring(46,47)).get().join("").replaceAll(".","");
+        var chartType = $('.tw img',this).attr("src").substring(48,49);
+        var difficultyLevel
+        if (chartType === "c") {
+            difficultyLevel = $($('.imG img',this)[1]).attr("src").substring(54,55);
+        } else {
+            number = $('.imG img',this)
+            firstNumber = $(number[0]).attr("src").substring(54, 55);
+            secondNumber = $(number[1]).attr("src").substring(54, 55);
+            difficultyLevel = firstNumber + secondNumber
+        }
         var scoreList = $(".etc_con>ul",this)[0];
-        var letter = $(scoreList.children[1].children[0].children[0].children[0]).attr('src').substring(32).replace(".png","").replace("_p","+");
+        var letter = $(scoreList.children[1].children[0].children[0].children[0]).attr('src').substring(40).replace(".png","").replace("_p","+");
         var score = $(scoreList.children[0].children[0].children[0].children[0])[0].innerText.replaceAll(",","");
-        var plate = $(scoreList.children[2].children[0].children[0].children[0]).attr("src").substring(32,34);
+        var plate = $(scoreList.children[2].children[0].children[0].children[0]).attr("src").substring(40,42);
         scores.push({songName, chartType, difficultyLevel, score, letter, plate});
     });
     console.log("Done on page "+pageIndex);
